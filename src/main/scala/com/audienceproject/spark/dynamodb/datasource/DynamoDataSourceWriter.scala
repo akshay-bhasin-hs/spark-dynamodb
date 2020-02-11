@@ -21,7 +21,7 @@
 package com.audienceproject.spark.dynamodb.datasource
 
 import com.audienceproject.spark.dynamodb.connector.TableConnector
-import org.apache.spark.sql.catalyst.InternalRow
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.sources.v2.writer.{DataSourceWriter, DataWriterFactory, WriterCommitMessage}
 import org.apache.spark.sql.types.StructType
 
@@ -31,7 +31,7 @@ class DynamoDataSourceWriter(parallelism: Int, parameters: Map[String, String], 
     private val tableName = parameters("tablename")
     private val dynamoConnector = new TableConnector(tableName, parallelism, parameters)
 
-    override def createWriterFactory(): DataWriterFactory[InternalRow] =
+    override def createWriterFactory(): DataWriterFactory[Row] =
         new DynamoWriterFactory(dynamoConnector, parameters, schema)
 
     override def commit(messages: Array[WriterCommitMessage]): Unit = {}

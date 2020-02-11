@@ -21,7 +21,7 @@
 package com.audienceproject.spark.dynamodb.datasource
 
 import com.amazonaws.services.dynamodbv2.document.{IncompatibleTypeException, Item}
-import org.apache.spark.sql.catalyst.InternalRow
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.catalyst.util.{ArrayBasedMapData, GenericArrayData}
 import org.apache.spark.sql.types._
 import org.apache.spark.unsafe.types.UTF8String
@@ -109,7 +109,7 @@ private[dynamodb] object TypeConversion {
     }
 
     private def extractStruct(conversions: Seq[(String, Any => Any)]): Any => Any = {
-        case map: java.util.Map[_, _] => InternalRow.fromSeq(conversions.map({
+        case map: java.util.Map[_, _] => Row.fromSeq(conversions.map({
             case (name, conv) => conv(map.get(name))
         }))
         case _ => null

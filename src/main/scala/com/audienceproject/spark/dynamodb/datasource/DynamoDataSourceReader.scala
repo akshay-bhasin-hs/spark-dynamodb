@@ -23,7 +23,7 @@ package com.audienceproject.spark.dynamodb.datasource
 import java.util
 
 import com.audienceproject.spark.dynamodb.connector.{FilterPushdown, TableConnector, TableIndexConnector}
-import org.apache.spark.sql.catalyst.InternalRow
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.sources.Filter
 import org.apache.spark.sql.sources.v2.reader._
 import org.apache.spark.sql.sources.v2.reader.partitioning.Partitioning
@@ -55,14 +55,6 @@ class DynamoDataSourceReader(parallelism: Int,
         if (currentSchema == null)
             currentSchema = userSchema.getOrElse(inferSchema())
         currentSchema
-    }
-
-    override def planInputPartitions(): util.List[InputPartition[InternalRow]] = {
-        val inputPartitions = new util.ArrayList[InputPartition[InternalRow]]
-        for (partitionIndex <- 0 until dynamoConnector.totalSegments) {
-            inputPartitions.add(new ScanPartition(readSchema(), partitionIndex, dynamoConnector, acceptedFilters))
-        }
-        inputPartitions
     }
 
     override def pruneColumns(requiredSchema: StructType): Unit = {
@@ -123,4 +115,7 @@ class DynamoDataSourceReader(parallelism: Int,
         case _ => StringType
     }
 
+    override def createDataReaderFactories(): util.List[DataReaderFactory[Row]] = {
+        throw new NotImplementedError()
+    }
 }

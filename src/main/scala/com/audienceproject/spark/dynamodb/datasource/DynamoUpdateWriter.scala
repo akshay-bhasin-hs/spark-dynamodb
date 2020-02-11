@@ -23,17 +23,17 @@ package com.audienceproject.spark.dynamodb.datasource
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.audienceproject.shaded.google.common.util.concurrent.RateLimiter
 import com.audienceproject.spark.dynamodb.connector.{ColumnSchema, TableConnector}
-import org.apache.spark.sql.catalyst.InternalRow
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.sources.v2.writer.{DataWriter, WriterCommitMessage}
 
 class DynamoUpdateWriter(columnSchema: ColumnSchema,
                          connector: TableConnector,
                          client: DynamoDB)
-    extends DataWriter[InternalRow] {
+    extends DataWriter[Row] {
 
     private val rateLimiter = RateLimiter.create(connector.writeLimit)
 
-    override def write(record: InternalRow): Unit = {
+    override def write(record: Row): Unit = {
         connector.updateItem(columnSchema, record)(client, rateLimiter)
     }
 

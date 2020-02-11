@@ -26,7 +26,7 @@ import com.amazonaws.services.dynamodbv2.model.ReturnConsumedCapacity
 import com.amazonaws.services.dynamodbv2.xspec.ExpressionSpecBuilder
 import com.audienceproject.shaded.google.common.util.concurrent.RateLimiter
 import com.audienceproject.spark.dynamodb.catalyst.JavaConverter
-import org.apache.spark.sql.catalyst.InternalRow
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.sources.Filter
 
 import scala.annotation.tailrec
@@ -109,7 +109,7 @@ private[dynamodb] class TableConnector(tableName: String, parallelism: Int, para
         getDynamoDB(region, roleArn).getTable(tableName).scan(scanSpec)
     }
 
-    override def putItems(columnSchema: ColumnSchema, items: Seq[InternalRow])
+    override def putItems(columnSchema: ColumnSchema, items: Seq[Row])
                          (client: DynamoDB, rateLimiter: RateLimiter): Unit = {
         // For each batch.
         val batchWriteItemSpec = new BatchWriteItemSpec().withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
@@ -143,7 +143,7 @@ private[dynamodb] class TableConnector(tableName: String, parallelism: Int, para
         handleBatchWriteResponse(client, rateLimiter)(response)
     }
 
-    override def updateItem(columnSchema: ColumnSchema, row: InternalRow)
+    override def updateItem(columnSchema: ColumnSchema, row: Row)
                            (client: DynamoDB, rateLimiter: RateLimiter): Unit = {
         val updateItemSpec = new UpdateItemSpec().withReturnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
 

@@ -6,9 +6,7 @@ version := "1.0.3"
 
 description := "Plug-and-play implementation of an Apache Spark custom data source for AWS DynamoDB."
 
-scalaVersion := "2.11.12"
-
-crossScalaVersions := Seq("2.11.12", "2.12.7")
+scalaVersion := "2.11.8"
 
 compileOrder := CompileOrder.JavaThenScala
 
@@ -18,7 +16,7 @@ libraryDependencies += "com.amazonaws" % "aws-java-sdk-sts" % "1.11.678"
 libraryDependencies += "com.amazonaws" % "aws-java-sdk-dynamodb" % "1.11.678"
 libraryDependencies += "com.amazonaws" % "DynamoDBLocal" % "[1.11,2.0)" % "test" exclude("com.google.guava", "guava")
 
-libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.4.4" % "provided"
+libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.3.0" % "provided"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
